@@ -1,0 +1,193 @@
+
+🎯 REQUIREMENTS
+Property Details:
+Location: Near Gokarna
+Property Size: 1 acre with coconut & betelnut trees
+Structure: 2-floor bungalow (center of property)
+Rental Unit: 2nd Floor (2 bedrooms with AC)
+Amenities: Kitchen, Refrigerator, Microwave, Optional Washing Machine
+Domain: vinayavana.great-site.net
+Website Features Needed:
+You are an expert full-stack PHP developer and technical writer. Produce a **ready-to-deploy**, working, commented, and well-structured PHP website for **VinayaVana Homestay** (domain vinayavana.great-site.net) that can be hosted on **InfinityFree**. Prioritize a **CSV-first implementation** (so it works on InfinityFree). Provide an **optional MySQL mode** with schema and instructions. Keep timezone = **Asia/Kolkata** and date format **YYYY-MM-DD** everywhere.
+
+Note - Create a stunning, elegant PHP website for VinayaVana Homestay - a serene 1-acre property near Gokarna, featuring a beautiful bungalow surrounded by coconut and betelnut trees.
+ the website needs to be hosted in the infinitfree hosting site so please provide information accordingly. Also have function file to calculate rates. I have multiple floors as a unit and I am also pleanning to build multiple cottages in future. So the availability should be checked as per unit
+
+Style & tone rules for your output:
+- Produce **working code only** (each file). After each file add a 1–2 sentence kid-friendly comment explaining purpose (e.g., "Think of config.php like your phone settings menu").
+- Use clear inline comments in code (⚠️ WARNING comments for things not to change).
+- Use simple explanations (explain like I'm 15) for the walkthrough parts.
+- No fluff. Keep explanations short (1-3 sentences) after code blocks.
+- Use Earth-tone design (greens, browns, cream) with gold/copper accents. Mobile responsive. Fast-loading images and smooth UI.
+
+PROJECT REQUIREMENTS (must implement)
+
+1) HOSTING & STORAGE
+- Must run on InfinityFree (no server cron, no non-shared binaries). Use `data/bookings.csv` by default, with file locking (flock) to avoid race conditions.
+- Provide option to switch to MySQL in `config.php` (explain switching steps).
+- Make sure file paths and permissions are safe for InfinityFree.
+
+2) FILE STRUCTURE (create these folders & files)
+- public/ (root for InfinityFree)
+  - index.php
+  - about.php
+  - accommodations.php
+  - gallery.php
+  - reviews.php
+  - contact.php
+  - tariff.php
+  - cab.php   <-- new CAB services page
+  - admin.php
+  - api/
+    - blocked_dates.php
+    - check_availability.php
+  - inc/
+    - header.php
+    - footer.php
+    - functions.php
+    - lib/
+      - availability.php
+  - css/
+    - style.css
+  - js/
+    - main.js
+  - assets/
+    - images/ (dummy placeholders)
+  - config.php
+- data/
+  - bookings.csv
+  - blocked_dates.csv
+- README.md
+
+3) config.php (master config)
+- Must be one file with all editable settings:
+  - site_title, site_phone, site_whatsapp, site_email, site_address
+  - domain
+  - timezone = 'Asia/Kolkata' (apply via date_default_timezone_set)
+  - storage_mode = 'csv' or 'mysql'
+  - csv_paths (bookings, blocked_dates)
+  - mysql settings (host, db, user, pass, table names)
+  - season dates & rates: regular_rate, peak_rate (Nov 1 - Feb 28/29), holiday_rate
+  - Indian public holidays list array (YYYY-MM-DD) and rules for applying holiday_rate
+  - min_stay, max_stay
+  - suggestions_N (e.g., 3), suggestions_M_days (e.g., 90)
+  - page_visibility array allowing future show/hide windows per page, e.g. 'tariff' => ['visible_from'=>'2025-10-10','visible_until'=>null]
+  - admin_password (simple; explain secure change)
+- Explain each setting 1 line like "Think of this like your phone settings."
+
+4) Core pages — each page must:
+- Use header.php + footer.php include
+- Have a BACK button to go to Home on every page
+- Contain "Book Now" CTAs linking to contact/booking flow
+- Where to add images (assets/images/filename.jpg placeholders)
+- Basic content areas: hero, features, gallery thumbnails, contact form (Google Form embed), WhatsApp click-to-chat button.
+
+5) Booking & Availability system (CSV-first)
+- data/bookings.csv header:
+  booking_id,room_id,checkin,checkout,name,phone,email,status
+- Provide example rows (2 rows) for testing.
+- Implement `lib/availability.php` with:
+  - isAvailable($room_id, $requested_checkin, $requested_checkout): checks CSV (or MySQL) and returns:
+    - ['available'=>true, 'rate'=>INT, 'message'=>'...'] OR
+    - ['available'=>false, 'conflicts'=>[...], 'suggestions'=>[...], 'message'=>'...']
+  - Overlap rule: treat check-in as **inclusive**, check-out as **exclusive** (i.e., [checkin, checkout) ). Explain this in comments.
+  - File locking with flock() when reading/writing CSV.
+  - Suggestion algorithm: find next N non-overlapping ranges of same length within next M days (read N and M from config). Respect min/max stay and blocked_dates.csv and seasonal/holiday rules.
+  - Helper functions to convert to DateTime in Asia/Kolkata and validate ranges.
+  - A CSV write with final double-check before saving (flock).
+- Provide an optional MySQL implementation in same file or alternate file with transactions and sample SQL schema and sample INSERT/SELECT queries.
+- Also have function file to calculate rates. I have multiple floors as a unit and I am also planning to build multiple cottages in future. So the availability should be checked as per unit and if the unit is occupied it should popup or display not available. Should also have a admin page to go and fillup the booked units
+
+6) APIs
+- api/blocked_dates.php
+  - Accepts `?room=2`
+  - Returns JSON: { "blocked": ["2025-12-20",...], "blocked_ranges":[["2025-12-20","2025-12-23"], ...] }
+  - Combine confirmed bookings + status=blocked entries from blocked_dates.csv
+- api/check_availability.php
+  - Accept POST or GET with room_id, checkin, checkout
+  - Uses isAvailable(), returns JSON per examples in project brief (available true/false, conflicts, suggestions, rate, message)
+  - Rechecks availability before returning success on final submit (double-check on server-side)
+
+7) Frontend JS (js/main.js)
+- Integrate a datepicker (flatpickr recommended; but since third-party remote includes may be blocked on InfinityFree, include CDN links in header as comments and instructions).
+- On page load call `/api/blocked_dates.php?room=2` to get blocked dates and disable them in datepicker.
+- When user selects dates, fire AJAX to `/api/check_availability.php` to show immediate availability and suggestion list if blocked.
+- If blocked, show buttons to auto-prefill WhatsApp message with suggested alternate dates:
+  "Hi VinayaVana, my preferred dates (YYYY-MM-DD to YYYY-MM-DD) are booked — please check availability for YYYY-MM-DD to YYYY-MM-DD"
+- Add graceful fallback to HTML5 date inputs if JS fails.
+
+8) Guest Reviews
+- Create reviews.php with 8–10 realistic dummy reviews.
+- Make a small admin editable JSON/CSV where admin can add/edit reviews (explain how in 1–2 lines).
+- Show how to edit reviews manually via the CSV/JSON.
+
+9) Admin controls (admin.php)
+- Password protected (simple session login using config admin_password)
+- Calendar UI to manually block/unblock dates (store as status=blocked in blocked_dates.csv or bookings.csv with status=blocked)
+- Show conflicting bookings list
+- Provide form to add a blocked range, delete blocked ranges
+- Show export button to download bookings.csv (explain manual FTP download on InfinityFree)
+
+10) CAB-services page
+- Add cab.php page with:
+  - 3 sample locations (Yana, Murdeshwar, Gokarna)
+  - Placeholders where you can add images near Gokarna (assets/images/yana.jpg, mudeshwar.jpg, etc.)
+  - Driver contact phone fields (editable through config or a small cab_drivers.csv)
+  - Button to call or WhatsApp driver
+  - Option to prefill a booking message to driver
+
+11) Page visibility control (tariff hide/unhide)
+- Implement logic that reads page_visibility from config.php.
+- If current date is outside visible_from/visible_until for 'tariff', show a friendly “Coming soon / Not available” placeholder (with admin option to override).
+- Explain how to set dates to hide or show a page.
+
+12) Tariff & Pricing display
+- tariff.php must show pricing per-night, with seasonal tags (Regular / Peak / Holiday).
+- Use config.php rules to compute final rate for selected dates (sum nights * rate per night, taking into account if some nights fall under holiday/peak).
+- Provide function calculateRate($checkin,$checkout) with clear comments and example.
+
+13) Extras (optional but include if possible)
+- Lightbox for images (simple JS)
+- Availability calendar for users (visual)
+- Email notification on booking (explain InfinityFree email limits — show code using PHP mail() but mark as sometimes blocked; suggest using SMTP relay and show how to switch)
+- AI chatbot integration: include placeholder for embedding a chatbot widget (instructions only)
+- Virtual tour placeholder (explain where to place 360 images)
+
+14) Testing & Deployment
+- README.md: concise step-by-step:
+  - File upload map (which file → which folder on InfinityFree)
+  - Set config.php values
+  - How to upload via FTP or InfinityFree file manager
+  - Permissions for data/ folder
+  - How to test (test bookings, blocked dates, admin block, API tests with curl)
+  - Checklist to verify (home, contact, whatsapp, blocked dates, API, tariff page visibility)
+- Provide a small "quick test" script or curl examples to call api/check_availability.php.
+
+15) Deliverables list (must produce these files in the response)
+- All PHP files listed above (complete, commented)
+- config.php (master settings)
+- css/style.css
+- js/main.js
+- lib/availability.php (CSV + MySQL implementations)
+- api endpoints (blocked_dates.php, check_availability.php)
+- data/bookings.csv (with 2 sample rows)
+- data/blocked_dates.csv sample
+- gallery placeholders and README explaining how to replace with real images
+- Folder structure diagram (simple text tree)
+- File upload guide (map file->folder)
+- Testing checklist
+- Short "How to change things later" quick tips (1-2 lines per common task: add photos, change colors, update rates, add reviews, add bedroom)
+
+16) Additional behavior rules for the AI
+- Prioritize CSV implementation; MySQL optional but provide schema and "how to switch" in config.
+- Use ISO dates YYYY-MM-DD everywhere.
+- After each file show a 1-2 sentence "kid-friendly" explanation.
+- After code blocks add a short 1–3 line “how to test this file” instruction.
+- For availability logic, use DateTimeImmutable or clear date arithmetic; show how to configure suggestions_N and suggestions_M_days.
+
+17) Final line in output: Ask nothing — just finish. Provide everything in a clear file-per-block layout so I can copy-paste files directly to InfinityFree.
+
+EXTRA: Also add these small features as part of the output:
+- Auto-prefill WhatsApp message when booking is blocked (with suggested dates)
+- An easy toggle in config.php to hide tariff page between dates
+- Cab page with images & driver phone placeholders
