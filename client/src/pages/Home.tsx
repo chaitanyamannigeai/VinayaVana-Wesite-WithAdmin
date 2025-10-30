@@ -116,7 +116,7 @@ export default function Home() {
               capacity={4}
               bedrooms={2}
               amenities={["Kitchen", "Refrigerator", "Microwave", "Washing Machine"]}
-              pricePerNight={3500}
+              pricePerNight={4500}
               available={true}
               seasonTag="Regular"
             />
