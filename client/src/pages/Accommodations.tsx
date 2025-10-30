@@ -13,22 +13,11 @@ export default function Accommodations() {
       capacity: 4,
       bedrooms: 2,
       amenities: ["Kitchen", "Refrigerator", "Microwave", "Washing Machine", "WiFi", "AC"],
-      pricePerNight: 3500,
+      pricePerNight: 4500,
       available: true,
       seasonTag: "Regular" as const,
     },
-	  const units = [
-    {
-      id: "Ground",
-      name: "1st Floor Suite",
-      image: bedroomImage,
-      capacity: 4,
-      bedrooms: 2,
-      amenities: ["Kitchen", "Refrigerator", "Microwave", "Washing Machine", "WiFi", "AC"],
-      pricePerNight: 3500,
-      available: true,
-      seasonTag: "Regular" as const,
-    },
+
   ];
 
   return (
