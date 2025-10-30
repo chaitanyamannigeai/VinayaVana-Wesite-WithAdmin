@@ -19,8 +19,8 @@ export default function Accommodations() {
     },
 	  const units = [
     {
-      id: "2nd-floor",
-      name: "2nd Floor Suite",
+      id: "Ground",
+      name: "1st Floor Suite",
       image: bedroomImage,
       capacity: 4,
       bedrooms: 2,
