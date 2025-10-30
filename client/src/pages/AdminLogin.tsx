@@ -23,19 +23,23 @@ export default function AdminLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        // 👇 This is the key so the session cookie is set & sent
+        credentials: "include",
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      // Try to parse JSON; if it fails, produce a generic error
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch {
+        /* ignore */
       }
 
-      toast({
-        title: "Success",
-        description: "Logged in successfully",
-      });
+      if (!response.ok) {
+        throw new Error(data?.error || "Login failed");
+      }
 
+      toast({ title: "Success", description: "Logged in successfully" });
       setLocation("/admin/dashboard");
     } catch (error) {
       toast({
