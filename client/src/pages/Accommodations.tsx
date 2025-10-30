@@ -17,6 +17,18 @@ export default function Accommodations() {
       available: true,
       seasonTag: "Regular" as const,
     },
+	  const units = [
+    {
+      id: "2nd-floor",
+      name: "2nd Floor Suite",
+      image: bedroomImage,
+      capacity: 4,
+      bedrooms: 2,
+      amenities: ["Kitchen", "Refrigerator", "Microwave", "Washing Machine", "WiFi", "AC"],
+      pricePerNight: 3500,
+      available: true,
+      seasonTag: "Regular" as const,
+    },
   ];
 
   return (
