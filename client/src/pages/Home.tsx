@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import UnitCard from "@/components/UnitCard";
 import AvailabilityChecker from "@/components/AvailabilityChecker";
+import TariffCalculator from "@/components/TariffCalculator";
 import ReviewCard from "@/components/ReviewCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -126,6 +127,12 @@ export default function Home() {
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AvailabilityChecker />
+        </div>
+      </section>
+	  
+	   <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TariffCalculator />
         </div>
       </section>
 
