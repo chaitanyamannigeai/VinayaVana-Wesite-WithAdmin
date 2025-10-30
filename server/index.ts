@@ -8,6 +8,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(sessionMiddleware);
 
+// 👇 Add this line so secure cookies work behind Render's proxy
+app.set('trust proxy', 1);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
