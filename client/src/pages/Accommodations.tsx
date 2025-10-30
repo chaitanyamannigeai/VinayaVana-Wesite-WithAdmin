@@ -3,6 +3,8 @@ import UnitCard from "@/components/UnitCard";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import bedroomImage from "@assets/accommodation-1_1760336319837.jpg";
+import AvailabilityChecker from "@/components/AvailabilityChecker";
+import TariffCalculator from "@/components/TariffCalculator";
 
 export default function Accommodations() {
   const units = [
@@ -52,7 +54,23 @@ export default function Accommodations() {
             </p>
           </div>
         </div>
+		<section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AvailabilityChecker />
+        </div>
+      </section>
+	  
+	   <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TariffCalculator />
+        </div>
+      </section>
       </div>
+	  
+	  
+	  
+	  
+	  
     </div>
   );
 }
