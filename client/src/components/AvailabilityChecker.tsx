@@ -83,7 +83,7 @@ export default function AvailabilityChecker() {
 
       // example rate calc: ₹3500/night (customize as you like)
       const nights = nightsBetween(checkIn, checkOut);
-      const ratePerNight = 3500;
+      const ratePerNight = 4500;
       const totalRate = data.available ? ratePerNight : undefined;
 
       setResult({
